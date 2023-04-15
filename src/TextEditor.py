@@ -44,7 +44,6 @@ class TextEditor:
         self.editmenu.add_command(label="Cut", accelerator="Ctrl+X", command=self.cut)
         self.editmenu.add_command(label="Copy", accelerator="Ctrl+C", command=self.copy)
         self.editmenu.add_command(label="Paste", accelerator="Ctrl+V", command=self.paste)
-        self.editmenu.add_command(label="Find", accelerator="Ctrl+F")
         self.editmenu.add_command(label="Undo", accelerator="Ctrl+U", command=self.undo)
         # Scrollbar and Text
         scrol_y = Scrollbar(self.root, orient=VERTICAL)
@@ -124,19 +123,6 @@ class TextEditor:
 
     def paste(self, *args):
         self.txtarea.event_generate("<<Paste>>")
-
-    def find(self, *args):
-        self.txtarea.tag_remove("found", '1.0', END)
-        target = askstring('Find', 'Search String:')
-        if target:
-            idx = '1.0'
-            while 1:
-                idx = self.txtarea.search(target, idx, nocase=1, stopindex=END)
-                if not idx: break
-                lastidx = '%s+%dc' % (idx, len(target))
-                self.txtarea.tag_add('found', idx, lastidx)
-                idx = lastidx
-            self.txtarea.tag_config('found', foreground='white', background='blue')
 
     def undo(self, *args):
         try:
