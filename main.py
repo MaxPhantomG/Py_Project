@@ -1,4 +1,4 @@
-import src/TextEditor
+import src.TextEditor
 
 root = task.Tk()
 task.TextEditor(root)
