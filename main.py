@@ -1,7 +1,7 @@
-import src.TextEditor
+import src.TextEditor as txt
 
-root = TextEditor.Tk()
-TextEditor.TextEditor(root)
+root = Ttxt.Tk()
+txt.TextEditor(root)
 root.mainloop()
 
 
