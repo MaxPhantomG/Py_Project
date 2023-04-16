@@ -5,11 +5,23 @@ import os
 
 
 class TextEditor:
+    """
+    Создаются статусные строки и меню, объявляются методы для обработки операций работы с файлами.
+    Далее реализуются операции, внесенные в меню:
+    settitle(self)
+    newfile(self, *args)
+    openfile(self, *args)
+    savefile(self, *args)
+    saveasfile(self, *args)
+    exit(self, *args)
+    cut(self, *args)
+    copy(self, *args)
+    pust(self, *args)
+    undo(self, *args)
+    Также функция добавление хоткеев для операций. 
+    """
     def __init__(self, root):
         self.root = root
-        self.root.title("Блокнот")
-        self.root.geometry("700x500")
-        root.minsize(width=400, height=400)
         self.filename = "Новый текстовый документ"
         self.title = StringVar()
         self.status = StringVar()
