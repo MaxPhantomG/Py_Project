@@ -4,7 +4,7 @@
 sudo apt-get install -y python3-tk
 git clone git@github.com:MaxPhantomG/Py_Project.git
 cd Py_Project
-python3 ./main.py
+python3 main.py
 ```
 # Функционал
 На первой статусной строке полный путь файла, с которым вы работаете(в начале работы просто 'Новый текстовый документ'), на второй - информация о последнем совершенном действии (изначально пустая).
