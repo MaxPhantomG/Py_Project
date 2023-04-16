@@ -1,6 +1,7 @@
 Представлена реализация текстового редактора(упрощенный аналог Блокнота)
 # Установка и запуск (линукс)
 ```
+sudo apt-get install -y python3-tk
 git clone git@github.com:MaxPhantomG/Py_Project.git
 cd Py_Project
 python3 ./main.py
