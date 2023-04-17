@@ -6,7 +6,8 @@ import os
 
 class TextEditor:
     """
-    Создаются статусные строки и меню, объявляются методы для обработки операций работы с файлами.
+    Создаются статусные строки и меню, объявляются методы для обработки операций работы с файлами,
+    создаютс формы для текстового поиска и замены. 
     Далее реализуются операции, внесенные в меню:
     settitle(self)
     newfile(self, *args)
@@ -18,6 +19,9 @@ class TextEditor:
     copy(self, *args)
     pust(self, *args)
     undo(self, *args)
+    Функции для реализации поиска всех вхождений и замены всех вхождений:
+    find(self)
+    replace(self)
     Также функция добавление хоткеев для операций. 
     """
     def __init__(self, root):
@@ -26,46 +30,106 @@ class TextEditor:
         self.title = StringVar()
         self.status = StringVar()
         # Titlebar
-        self.titlebar = Label(self.root, textvariable=self.title, font=("times new roman", 15, "bold", "italic"),
-                              relief=RIDGE)
+        self.titlebar = Label(self.root, textvariable=self.title,
+                              font=("times new roman", 15, "bold", "italic"), relief=RIDGE)
         self.titlebar.pack(side=TOP, fill=BOTH)
         self.settitle()
         # Statusbar
-        self.statusbar = Label(self.root, textvariable=self.status, font=("times new roman", 15, "bold", "italic"),
-                               relief=RIDGE)
+        self.statusbar = Label(self.root, textvariable=self.status,
+                               font=("times new roman", 15, "bold", "italic"), relief=RIDGE)
         self.statusbar.pack(side=TOP, fill=BOTH)
+
+        #FindReplcacebar
+        self.create_find_and_replace()
+        
         # Menubar
-        self.menubar = Menu(self.root, font=("times new roman", 15), activebackground="skyblue",
-                            activeforeground="white")
+        self.menubar = Menu(self.root, font=("times new roman", 15),
+                            activebackground="skyblue", activeforeground="white")
         self.root.config(menu=self.menubar)
         self.root.option_add("*tearOff", FALSE)
         # FileSection
-        self.filemenu = Menu(self.menubar, font=("times new roman", 11), activebackground="skyblue",
-                             activeforeground="white")
-        self.menubar.add_cascade(label="File", menu=self.filemenu)
-        self.filemenu.add_command(label="New", accelerator="Ctrl+N", command=self.newfile)
-        self.filemenu.add_command(label="Open", accelerator="Ctrl+O", command=self.openfile)
-        self.filemenu.add_command(label="Save", accelerator="Ctrl+S", command=self.savefile)
-        self.filemenu.add_command(label="Save As", accelerator="Ctrl+A", command=self.saveasfile)
-        self.filemenu.add_separator()
-        self.filemenu.add_command(label="Exit", accelerator="Ctrl+E", command=self.exit)
+        self.filesection()
         # EditSection
-        self.editmenu = Menu(self.menubar, font=("times new roman", 11), activebackground="skyblue",
-                             activeforeground="white")
-        self.menubar.add_cascade(label="Edit", menu=self.editmenu)
-        self.editmenu.add_command(label="Cut", accelerator="Ctrl+X", command=self.cut)
-        self.editmenu.add_command(label="Copy", accelerator="Ctrl+C", command=self.copy)
-        self.editmenu.add_command(label="Paste", accelerator="Ctrl+V", command=self.paste)
-        self.editmenu.add_command(label="Undo", accelerator="Ctrl+U", command=self.undo)
+        self.editsection()
         # Scrollbar and Text
         scrol_y = Scrollbar(self.root, orient=VERTICAL)
         scrol_y.pack(side=RIGHT, fill=Y)
-        self.txtarea = Text(self.root, yscrollcommand=scrol_y.set, font=("times new roman", 15), state="normal")
+        self.txtarea = Text(self.root, yscrollcommand=scrol_y.set,
+                            font=("times new roman", 15))
         scrol_y.config(command=self.txtarea.yview)
         self.txtarea.pack(fill=BOTH, expand=1)
+
+        
         # ShortcutsFunction
         self.hotkeyforsshortcuts()
 
+    def create_find_and_replace(self):
+        self.fram = Frame(self.root)
+        self.e = Label(self.fram, text='Replace on').pack(side = LEFT)
+        self.replaceedit = Entry(self.fram) 
+        self.replaceedit.pack(side = LEFT, fill = BOTH)
+        self.replaceedit.focus_set()
+        self.replacebutton = Button(self.fram, text='Replace')
+        self.replacebutton.pack(side = LEFT)
+        self.fram.pack(side=BOTTOM, fill=BOTH)
+        
+        self.fram = Frame(self.root)
+        self.e = Label(self.fram, text='            Find').pack(side = LEFT)
+        self.findedit = Entry(self.fram) 
+        self.findedit.pack(side = LEFT, fill = BOTH)
+        self.findedit.focus_set()
+        self.findbutton = Button(self.fram, text='Find')
+        self.findbutton.pack(side = LEFT)
+        self.fram.pack(side=BOTTOM, fill=BOTH)
+
+        self.findbutton.config(command=self.find)
+        self.replacebutton.config(command=self.replace)
+        
+    
+    def filesection(self):
+        self.filemenu = Menu(self.menubar,
+                             font=("times new roman", 11),
+                             activebackground="skyblue",
+                             activeforeground="white")
+        self.menubar.add_cascade(label="File",
+                                 menu=self.filemenu)
+        self.filemenu.add_command(label="New",
+                                  accelerator="Ctrl+N",
+                                  command=self.newfile)
+        self.filemenu.add_command(label="Open",
+                                  accelerator="Ctrl+O",
+                                  command=self.openfile)
+        self.filemenu.add_command(label="Save",
+                                  accelerator="Ctrl+S",
+                                  command=self.savefile)
+        self.filemenu.add_command(label="Save As",
+                                  accelerator="Ctrl+A",
+                                  command=self.saveasfile)
+        self.filemenu.add_separator()
+        self.filemenu.add_command(label="Exit",
+                                  accelerator="Ctrl+E",
+                                  command=self.exit)
+
+    def editsection(self):
+        self.editmenu = Menu(self.menubar,
+                             font=("times new roman", 11),
+                             activebackground="skyblue",
+                             activeforeground="white")
+        self.menubar.add_cascade(label="Edit",
+                                 menu=self.editmenu)
+        self.editmenu.add_command(label="Cut",
+                                  accelerator="Ctrl+X",
+                                  command=self.cut)
+        self.editmenu.add_command(label="Copy",
+                                  accelerator="Ctrl+C",
+                                  command=self.copy)
+        self.editmenu.add_command(label="Paste",
+                                  accelerator="Ctrl+V",
+                                  command=self.paste)
+        self.editmenu.add_command(label="Undo",
+                                  accelerator="Ctrl+U",
+                                  command=self.undo)
+    
     def settitle(self):
         if self.filename != "Новый текстовый документ":
             self.title.set(f"{os.path.basename(self.filename)} - {self.filename}")
@@ -96,7 +160,7 @@ class TextEditor:
 
     def savefile(self, *args):
         try:
-            if self.filename:
+            if self.filename != "Новый текстовый документ":
                 data = self.txtarea.get("1.0", END)
                 outfile = open(self.filename, "w")
                 outfile.write(data)
@@ -110,8 +174,10 @@ class TextEditor:
 
     def saveasfile(self, *args):
         try:
-            untitledfile = filedialog.asksaveasfilename(title="Save file As", defaultextension=".txt",
-                                                        initialfile="Untitled.txt", filetypes=(
+            untitledfile = filedialog.asksaveasfilename(title="Save file As",
+                                                        defaultextension=".txt",
+                                                        initialfile="Untitled.txt",
+                                                        filetypes=(
                     ("All Files", "*.*"), ("Text Files", "*.txt"), ("Python Files", "*.py")))
             data = self.txtarea.get("1.0", END)
             outfile = open(untitledfile, "w")
@@ -124,7 +190,8 @@ class TextEditor:
             messagebox.showerror("Error", e)
 
     def exit(self, *args):
-        if messagebox.askyesno("Warning", "Your changes are not saved. Get out anyway?") > 0:
+        if messagebox.askyesno("Warning",
+                               "Your changes are not saved. Get out anyway?") > 0:
             self.root.destroy()
 
     def cut(self, *args):
@@ -153,6 +220,49 @@ class TextEditor:
                 self.status.set("Undone Successfully")
         except Exception as e:
             messagebox.showerror("Exception", e)
+
+    def find(self):
+        self.txtarea.tag_remove('found', '1.0', END)
+     
+        s = self.findedit.get()
+        if (s):
+            idx = '1.0'
+            while 1:
+                idx = self.txtarea.search(s, idx, nocase = 1,
+                            stopindex = END)
+             
+                if not idx: break
+                lastidx = '% s+% dc' % (idx, len(s))
+              
+                # overwrite 'Found' at idx
+                self.txtarea.tag_add('found', idx, lastidx)
+                idx = lastidx
+         
+            self.txtarea.tag_config('found', foreground='blue')
+        self.findedit.focus_set()
+
+    def replace(self):
+        self.txtarea.tag_remove('found', '1.0', END)
+     
+        s, r = self.findedit.get(), self.replaceedit.get()
+     
+        if (s and r):
+            idx = '1.0'
+            while 1:
+                idx = self.txtarea.search(s, idx, nocase = 1,
+                                stopindex = END)
+                if not idx: break
+                 
+                lastidx = '% s+% dc' % (idx, len(s))
+     
+                self.txtarea.delete(idx, lastidx)
+                self.txtarea.insert(idx, r)
+     
+                lastidx = '% s+% dc' % (idx, len(r))
+                 
+                # overwrite 'Found' at idx
+                self.txtarea.tag_add('found', idx, lastidx)
+                idx = lastidx
 
     def hotkeyforsshortcuts(self):
         self.txtarea.bind("<Control-n>", self.newfile)
