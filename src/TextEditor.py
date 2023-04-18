@@ -38,10 +38,8 @@ class TextEditor:
         self.statusbar = Label(self.root, textvariable=self.status,
                                font=("times new roman", 15, "bold", "italic"), relief=RIDGE)
         self.statusbar.pack(side=TOP, fill=BOTH)
-
         #FindReplcacebar
         self.create_find_and_replace()
-        
         # Menubar
         self.menubar = Menu(self.root, font=("times new roman", 15),
                             activebackground="skyblue", activeforeground="white")
@@ -58,14 +56,12 @@ class TextEditor:
                             font=("times new roman", 15))
         scrol_y.config(command=self.txtarea.yview)
         self.txtarea.pack(fill=BOTH, expand=1)
-
-        
         # ShortcutsFunction
         self.hotkeyforsshortcuts()
 
     def create_find_and_replace(self):
         self.fram = Frame(self.root)
-        self.e = Label(self.fram, text='Replace on').pack(side = LEFT)
+        self.replaceprint = Label(self.fram, text='Replace on').pack(side = LEFT)
         self.replaceedit = Entry(self.fram) 
         self.replaceedit.pack(side = LEFT, fill = BOTH)
         self.replaceedit.focus_set()
@@ -74,7 +70,7 @@ class TextEditor:
         self.fram.pack(side=BOTTOM, fill=BOTH)
         
         self.fram = Frame(self.root)
-        self.e = Label(self.fram, text='            Find').pack(side = LEFT)
+        self.findprint = Label(self.fram, text='            Find').pack(side = LEFT)
         self.findedit = Entry(self.fram) 
         self.findedit.pack(side = LEFT, fill = BOTH)
         self.findedit.focus_set()
@@ -223,46 +219,34 @@ class TextEditor:
 
     def find(self):
         self.txtarea.tag_remove('found', '1.0', END)
-     
-        s = self.findedit.get()
-        if (s):
-            idx = '1.0'
+        getter = self.findedit.get()
+        if (getter):
+            index = '1.0'
             while 1:
-                idx = self.txtarea.search(s, idx, nocase = 1,
-                            stopindex = END)
-             
-                if not idx: break
-                lastidx = '% s+% dc' % (idx, len(s))
-              
-                # overwrite 'Found' at idx
-                self.txtarea.tag_add('found', idx, lastidx)
-                idx = lastidx
-         
+                index = self.txtarea.search(getter, index, nocase = 1,
+                            stopindex = END)   
+                if not index: break
+                lastindex = '% s+% dc' % (index, len(getter))
+                self.txtarea.tag_add('found', index, lastindex)
+                index = lastindex
             self.txtarea.tag_config('found', foreground='blue')
         self.findedit.focus_set()
 
     def replace(self):
         self.txtarea.tag_remove('found', '1.0', END)
-     
-        s, r = self.findedit.get(), self.replaceedit.get()
-     
-        if (s and r):
-            idx = '1.0'
+        getter_find, getter_replace = self.findedit.get(), self.replaceedit.get()
+        if (getter_find and getter_replace):
+            index = '1.0'
             while 1:
-                idx = self.txtarea.search(s, idx, nocase = 1,
+                index = self.txtarea.search(getter_find, index, nocase = 1,
                                 stopindex = END)
-                if not idx: break
-                 
-                lastidx = '% s+% dc' % (idx, len(s))
-     
-                self.txtarea.delete(idx, lastidx)
-                self.txtarea.insert(idx, r)
-     
-                lastidx = '% s+% dc' % (idx, len(r))
-                 
-                # overwrite 'Found' at idx
-                self.txtarea.tag_add('found', idx, lastidx)
-                idx = lastidx
+                if not index: break
+                lastindex = '% s+% dc' % (index, len(getter_find))
+                self.txtarea.delete(index, lastindex)
+                self.txtarea.insert(index, getter_replace)
+                lastindex = '% s+% dc' % (index, len(getter_replace))
+                self.txtarea.tag_add('found', index, lastindex)
+                index = lastindex
 
     def hotkeyforsshortcuts(self):
         self.txtarea.bind("<Control-n>", self.newfile)
@@ -274,3 +258,4 @@ class TextEditor:
         self.txtarea.bind("<Control-c>", self.copy)
         self.txtarea.bind("<Control-v>", self.paste)
         self.txtarea.bind("<Control-u>", self.undo)
+        
