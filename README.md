@@ -18,3 +18,5 @@ python3 main.py
 
 
 ![](https://github.com/MaxPhantomG/Py_Project/blob/dev/images/Menu_3.png)
+
+Примечание: *хоткеи для перемещения в начало/конец строки(Home/End) установлены по умолчанию*
