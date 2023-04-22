@@ -155,35 +155,29 @@ class TextEditor:
             messagebox.showerror("Error", e)
 
     def savefile(self, *args):
-        try:
-            if self.filename != "Новый текстовый документ":
-                data = self.txtarea.get("1.0", END)
-                outfile = open(self.filename, "w")
-                outfile.write(data)
-                outfile.close()
-                self.settitle()
-                self.status.set(f"{os.path.basename(self.filename)} - Saved Successfully")
-            else:
-                self.saveasfile()
-        except Exception as e:
-            messagebox.showerror("Error", e)
-
-    def saveasfile(self, *args):
-        try:
-            untitledfile = filedialog.asksaveasfilename(title="Save file As",
-                                                        defaultextension=".txt",
-                                                        initialfile="Untitled.txt",
-                                                        filetypes=(
-                    ("All Files", "*.*"), ("Text Files", "*.txt"), ("Python Files", "*.py")))
+        if self.filename != "Новый текстовый документ":
             data = self.txtarea.get("1.0", END)
-            outfile = open(untitledfile, "w")
+            outfile = open(self.filename, "w")
             outfile.write(data)
             outfile.close()
-            self.filename = untitledfile
             self.settitle()
             self.status.set(f"{os.path.basename(self.filename)} - Saved Successfully")
-        except Exception as e:
-            messagebox.showerror("Error", e)
+        else:
+            self.saveasfile()
+
+    def saveasfile(self, *args):
+        untitledfile = filedialog.asksaveasfilename(title="Save file As",
+                                                    defaultextension=".txt",
+                                                    initialfile="Untitled.txt",
+                                                    filetypes=(
+                ("All Files", "*.*"), ("Text Files", "*.txt"), ("Python Files", "*.py")))
+        data = self.txtarea.get("1.0", END)
+        outfile = open(untitledfile, "w")
+        outfile.write(data)
+        outfile.close()
+        self.filename = untitledfile
+        self.settitle()
+        self.status.set(f"{os.path.basename(self.filename)} - Saved Successfully")
 
     def exit(self, *args):
         if messagebox.askyesno("Warning",
@@ -258,4 +252,3 @@ class TextEditor:
         self.txtarea.bind("<Control-c>", self.copy)
         self.txtarea.bind("<Control-v>", self.paste)
         self.txtarea.bind("<Control-u>", self.undo)
-        
