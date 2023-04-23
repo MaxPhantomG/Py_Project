@@ -18,7 +18,7 @@ python3 main.py
 
 ![](https://github.com/MaxPhantomG/Py_Project/blob/dev/images/Menu_3.png)
 
-В случае нажатия команды Replace(ctrl+r) пользователь должен набрать в открывшуюся форму строку, **которую хочет заменить** нажать Enter, затем набрать строку **которую хочет вставить и снова нажать Enter**
+В случае нажатия команды Replace(ctrl+r) пользователь должен набрать в открывшуюся форму строку, **которую хочет заменить** и нажать Enter, затем набрать строку **которую хочет вставить и снова нажать Enter**
 
 ![](https://github.com/MaxPhantomG/Py_Project/blob/dev/images/Menu_4.png)
 ![](https://github.com/MaxPhantomG/Py_Project/blob/dev/images/Menu_5.png)
