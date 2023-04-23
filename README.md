@@ -14,9 +14,13 @@ python3 main.py
 ![](https://github.com/MaxPhantomG/Py_Project/blob/dev/images/Menu_1.png)
 ![](https://github.com/MaxPhantomG/Py_Project/blob/dev/images/Menu_2.png)
 
-В нижней части расположены две формы для набора текста Find и Replace, если вы хотите найти в файле все вхождения последовательности символов, то наберите текст в формe Find и нажмите на кнопку Find. Если хотите заменить все вхождения последовательности символов на новую, то в форме Find нужно набрать последовательность, **которую вы хотите заменить**, в форме Replace последовательность **на которую вы хотите ее заменить**, далее нажать на кнопку Replace.  
-
+В случае нажатия команды Find(ctrl+f) пользователь должен набрать в открывшуюся форму нужную строку и нажать Enter. 
 
 ![](https://github.com/MaxPhantomG/Py_Project/blob/dev/images/Menu_3.png)
+
+В случае нажатия команды Replace(ctrl+r) пользователь должен набрать в открывшуюся форму строку, **которую хочет заменить** и нажать Enter, затем набрать строку **которую хочет вставить и снова нажать Enter**
+
+![](https://github.com/MaxPhantomG/Py_Project/blob/dev/images/Menu_4.png)
+![](https://github.com/MaxPhantomG/Py_Project/blob/dev/images/Menu_5.png)
 
 Примечание: *хоткеи для перемещения в начало/конец строки(Home/End) установлены по умолчанию*
