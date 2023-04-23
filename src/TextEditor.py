@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+from tkinter import simpledialog
 from tkinter import filedialog
 import os
 
@@ -20,8 +21,8 @@ class TextEditor:
     pust(self, *args)
     undo(self, *args)
     Функции для реализации поиска всех вхождений и замены всех вхождений:
-    find(self)
-    replace(self)
+    find(self, *args)
+    replace(self, *args)
     Также функция добавление хоткеев для операций. 
     """
     def __init__(self, root):
@@ -38,8 +39,6 @@ class TextEditor:
         self.statusbar = Label(self.root, textvariable=self.status,
                                font=("times new roman", 15, "bold", "italic"), relief=RIDGE)
         self.statusbar.pack(side=TOP, fill=BOTH)
-        #FindReplcacebar
-        self.create_find_and_replace()
         # Menubar
         self.menubar = Menu(self.root, font=("times new roman", 15),
                             activebackground="skyblue", activeforeground="white")
@@ -57,30 +56,7 @@ class TextEditor:
         scrol_y.config(command=self.txtarea.yview)
         self.txtarea.pack(fill=BOTH, expand=1)
         # ShortcutsFunction
-        self.hotkeyforsshortcuts()
-
-    def create_find_and_replace(self):
-        self.fram = Frame(self.root)
-        self.replaceprint = Label(self.fram, text='Replace on').pack(side = LEFT)
-        self.replaceedit = Entry(self.fram) 
-        self.replaceedit.pack(side = LEFT, fill = BOTH)
-        self.replaceedit.focus_set()
-        self.replacebutton = Button(self.fram, text='Replace')
-        self.replacebutton.pack(side = LEFT)
-        self.fram.pack(side=BOTTOM, fill=BOTH)
-        
-        self.fram = Frame(self.root)
-        self.findprint = Label(self.fram, text='            Find').pack(side = LEFT)
-        self.findedit = Entry(self.fram) 
-        self.findedit.pack(side = LEFT, fill = BOTH)
-        self.findedit.focus_set()
-        self.findbutton = Button(self.fram, text='Find')
-        self.findbutton.pack(side = LEFT)
-        self.fram.pack(side=BOTTOM, fill=BOTH)
-
-        self.findbutton.config(command=self.find)
-        self.replacebutton.config(command=self.replace)
-        
+        self.hotkeyforsshortcuts()        
     
     def filesection(self):
         self.filemenu = Menu(self.menubar,
@@ -122,6 +98,12 @@ class TextEditor:
         self.editmenu.add_command(label="Paste",
                                   accelerator="Ctrl+V",
                                   command=self.paste)
+        self.editmenu.add_command(label="Find",
+                                  accelerator="Ctrl+F",
+                                  command=self.find)
+        self.editmenu.add_command(label="Replace",
+                                  accelerator="Ctrl+R",
+                                  command=self.replace)
         self.editmenu.add_command(label="Undo",
                                   accelerator="Ctrl+U",
                                   command=self.undo)
@@ -211,24 +193,28 @@ class TextEditor:
         except Exception as e:
             messagebox.showerror("Exception", e)
 
-    def find(self):
+    def find(self, *args):
         self.txtarea.tag_remove('found', '1.0', END)
-        getter = self.findedit.get()
-        if (getter):
+        getter = simpledialog.askstring('Find', 'Введите строку:',
+                                        parent = self.root)
+        if getter:
             index = '1.0'
             while 1:
-                index = self.txtarea.search(getter, index, nocase = 1,
-                            stopindex = END)   
+                index = self.txtarea.search(getter, index, nocase=1, stopindex=END)
                 if not index: break
-                lastindex = '% s+% dc' % (index, len(getter))
+                lastindex = '%s+%dc' % (index, len(getter))
                 self.txtarea.tag_add('found', index, lastindex)
                 index = lastindex
             self.txtarea.tag_config('found', foreground='blue')
-        self.findedit.focus_set()
 
-    def replace(self):
+    def replace(self, *args):
         self.txtarea.tag_remove('found', '1.0', END)
-        getter_find, getter_replace = self.findedit.get(), self.replaceedit.get()
+        getter_find = simpledialog.askstring('Find',
+                                             'Введите строку, которую хотите заменить:',
+                                              parent = self.root)
+        getter_replace = simpledialog.askstring('Replace',
+                                                'Введите строку, которую хотите вставить:',
+                                                 parent = self.root)
         if (getter_find and getter_replace):
             index = '1.0'
             while 1:
@@ -251,4 +237,6 @@ class TextEditor:
         self.txtarea.bind("<Control-x>", self.cut)
         self.txtarea.bind("<Control-c>", self.copy)
         self.txtarea.bind("<Control-v>", self.paste)
+        self.txtarea.bind("<Control-f>", self.find)
+        self.txtarea.bind("<Control-r>", self.replace)
         self.txtarea.bind("<Control-u>", self.undo)
