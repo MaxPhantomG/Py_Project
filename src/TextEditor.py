@@ -52,11 +52,11 @@ class TextEditor:
         scrol_y = Scrollbar(self.root, orient=VERTICAL)
         scrol_y.pack(side=RIGHT, fill=Y)
         self.txtarea = Text(self.root, yscrollcommand=scrol_y.set,
-                            font=("times new roman", 15))
+                            font=("times new roman", 15), undo = True)
         scrol_y.config(command=self.txtarea.yview)
         self.txtarea.pack(fill=BOTH, expand=1)
         # ShortcutsFunction
-        self.hotkeyforsshortcuts()        
+        self.hotkeyforsshortcuts()
     
     def filesection(self):
         self.filemenu = Menu(self.menubar,
@@ -105,7 +105,7 @@ class TextEditor:
                                   accelerator="Ctrl+R",
                                   command=self.replace)
         self.editmenu.add_command(label="Undo",
-                                  accelerator="Ctrl+U",
+                                  accelerator="Ctrl+Z",
                                   command=self.undo)
     
     def settitle(self):
@@ -176,22 +176,7 @@ class TextEditor:
         self.txtarea.event_generate("<<Paste>>")
 
     def undo(self, *args):
-        try:
-            if self.filename:
-                self.txtarea.delete("1.0", END)
-                infile = open(self.filename, "r")
-                for line in infile:
-                    self.txtarea.insert(END, line)
-                infile.close()
-                self.settitle()
-                self.status.set("Undone Successfully")
-            else:
-                self.txtarea.delete("1.0", END)
-                self.filename = None
-                self.settitle()
-                self.status.set("Undone Successfully")
-        except Exception as e:
-            messagebox.showerror("Exception", e)
+        self.txtarea.event_generate("<<Undo>>")
 
     def find(self, *args):
         self.txtarea.tag_remove('found', '1.0', END)
@@ -206,6 +191,7 @@ class TextEditor:
                 self.txtarea.tag_add('found', index, lastindex)
                 index = lastindex
             self.txtarea.tag_config('found', foreground='blue')
+        self.txtarea.focus_set() 
 
     def replace(self, *args):
         self.txtarea.tag_remove('found', '1.0', END)
@@ -227,6 +213,7 @@ class TextEditor:
                 lastindex = '% s+% dc' % (index, len(getter_replace))
                 self.txtarea.tag_add('found', index, lastindex)
                 index = lastindex
+        self.txtarea.focus_set()
 
     def hotkeyforsshortcuts(self):
         self.txtarea.bind("<Control-n>", self.newfile)
@@ -239,4 +226,4 @@ class TextEditor:
         self.txtarea.bind("<Control-v>", self.paste)
         self.txtarea.bind("<Control-f>", self.find)
         self.txtarea.bind("<Control-r>", self.replace)
-        self.txtarea.bind("<Control-u>", self.undo)
+        self.txtarea.bind("<Control-z>", self.undo)
